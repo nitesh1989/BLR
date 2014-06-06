@@ -8,13 +8,11 @@ __author__ = "niteshturaga"
 Script used to divide the genome of given organism into multiple
 files, with overlap of a 100 nucleotides.
 
-Author: Nitesh Turaga
-Institution: Johns Hopkins University
+Nitesh Turaga
 Email:nturaga1@jhmi.edu
 """
 
 # Set working directory
-os.getcwd()
 os.chdir("/Users/niteshturaga/Documents/BenLangmeadResearch/CE_FMIndex/data")
 
 

@@ -5,7 +5,6 @@ import time
 __author__ = 'niteshturaga'
 
 # Set working directory
-os.getcwd()
 os.chdir("/Users/niteshturaga/Documents/BenLangmeadResearch/CE_FMIndex/data/")
 
 
@@ -20,11 +19,7 @@ def run_bowtie_build(path):
     # Bowtie call
     inp = [f for f in os.listdir(path) if f.endswith('.fa')]
     for i in xrange(len(inp)):
-        # print "Broken Chromosome Fasta file: ", inp[i]
         in_file = path + inp[i]
-        # out_file = " ./BrokenGenomeIndex/" + \
-        #            re.sub(".fa", "", inp[i]) + " > " + " ./BrokenGenomeIndex/" + \
-        #            re.sub(".fa", "", inp[i]) + ".pyout"
         out_file = os.path.join(new_dir, re.sub(".fa", "", inp[i])) + " > " + \
                    os.path.join(new_dir, re.sub(".fa", "", inp[i])) + ".pyout"
         bt = "" + bowtie_path + "bowtie-build" + " --ftabchars 6 " + in_file + " " + out_file
@@ -73,27 +68,23 @@ def run_bowtie_align(index_path, fastq_file):
     for i in xrange(len(inp)):
 
         out_file = os.path.join(new_dir, inp[i]) + ".res"
-                   # + " | cat " + os.path.join(new_dir, inp[i]) + ".timestats"
         align = bowtie_path + " -t " + inp[i] + " " + fastq_file + " > " + out_file
-        # print align
         os.system(align)
     return "Aligning with bowtie index done"
 
 
 def main():
     run_bowtie_build("/Users/niteshturaga/Documents/BenLangmeadResearch/CE_FMIndex/data/BrokenGenome24/")
+
+    # FastQ generator is run only once
     # run_fastq_generator("/Users/niteshturaga/Documents/BenLangmeadResearch/CE_FMIndex/data/cElegansGenome")
+
     indexes_path = "/Users/niteshturaga/Documents/BenLangmeadResearch/CE_FMIndex/bowtie-1.0.1/indexes"
     fastq_path = "/Users/niteshturaga/Documents/BenLangmeadResearch/CE_FMIndex/data/cElegansGenome/chr_all_1.fastq"
-    # start = time.clock()
-    # print "START: ", start
+
+    # TIME IT
     t0 = time.time()
-    # print "T0: ", t0
     run_bowtie_align(indexes_path, fastq_path)
-    # end = time.clock()
-    # print "END: ", end
-    # the_time = end - start
-    # print "TIME TAKEN: ", the_time
     print "seconds wall time", time.time() - t0
 
     return
