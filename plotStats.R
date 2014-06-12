@@ -1,27 +1,43 @@
-divisions = c(2, 4, 8, 12, 16, 20, 24)
-time_taken = c(125.673305035, 204.298361063, 362.651827812, 518.877280951, 659.774741888, 783.794388056, 923.709709883)
+# Nitesh Turaga
+# nitesh.turaga@gmail.com
 
-pdf(file = "BenLangmeadResearch/CE_FMIndex/figs/timeVsdivisions.pdf")
-
-yticks =  c(125, 204, 362, 518, 659, 783, 923)
-xticks = c(2, 4, 8, 12, 16, 20, 24)
-plot(divisions,time_taken,pch=".",cex = 10,col = "red",yaxt="n",xaxt="n",main = "Number of divisions of Bowtie Index vs Time taken to Align",ylab="Time Taken in seconds",xlab="Number of Divisions of Index")
-axis(2,at=yticks,labels=yticks)
-axis(1,at=xticks,labels=xticks)
-lines(formula=time_taken~divisions,col="blue",lwd=2)
-#abline(v=divisions)
-#abline(h=time_taken)
-dev.off()
-
+#############################################
 # ggplot2 implementation to plot the trend
-
+#############################################
 library(ggplot2)
+
+
+##################################################################
+# Time taken vs index divisions
+##################################################################
 dat = data.frame(divisions,time_taken)
-dat
+dat = read.table("BenLangmeadResearch/CE_FMIndex/figs/time_stats.txt")
+colnames(dat) = c("divisions","time_taken")
+fig1 = ggplot(dat, aes(x=divisions, y=time_taken)) + geom_point(shape=1) +  geom_smooth(method=lm) + geom_point(size=3, colour="#CC0000") + labs(title = "Number of divisions of Bowtie Index vs Time taken to Align") + ylab("Time Taken in seconds") + xlab("Number of Divisions of Index")
+fig1
+##################################################################
 
-fig = ggplot(dat, aes(x=divisions, y=time_taken)) + geom_point(shape=1) +  geom_smooth(method=lm) + geom_point(size=3, colour="#CC0000") + labs(title = "Number of divisions of Bowtie Index vs Time taken to Align") + ylab("Time Taken in seconds") + xlab("Number of Divisions of Index")
 
-fig
+##################################################################
+# Alignment % vs index divisions
+##################################################################
+# number of reads aligned vs index divisions
+align_dat = read.table("BenLangmeadResearch/CE_FMIndex/figs/align_stat.txt",sep="\t")
+V1 = gsub("genome ","",align_dat$V1)
+V1 = gsub(" splits","",V1)
+align_dat$V1 = as.numeric(V1)
 
-dev.off()
+fig_align = ggplot(align_dat, aes(x=V1, y=V2)) + 
+      geom_point(shape=1) + 
+      geom_point(size=3, colour="#CC0000") + 
+      labs(title = "Number of divisions of Bowtie Index vs Reads Aligned") +
+      ylab("Reads with atleast 1 alignment") +
+      xlab("Number of Divisions of Index") +
+      scale_y_continuous(breaks=align_dat$V2)
+
+
+fig_align
+##################################################################
+
+
 
